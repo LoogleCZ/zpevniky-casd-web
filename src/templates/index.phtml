@@ -1,0 +1,143 @@
+<?php
+/** @var DataObject $block */
+
+?>
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="UTF-8">
+        <title>Zpěvníky CASD - digitální podoba zpěvníků</title>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCP8MSJBE2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-GCP8MSJBE2');
+        </script>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"
+              rel="stylesheet" crossorigin="anonymous"/>
+        <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet"
+              crossorigin="anonymous"/>
+        <link href="https://cdn.datatables.net/searchpanes/2.1.2/css/searchPanes.bootstrap5.min.css" rel="stylesheet"
+              crossorigin="anonymous"/>
+        <link href="https://cdn.datatables.net/select/1.6.2/css/select.bootstrap5.min.css" rel="stylesheet"
+              crossorigin="anonymous"/>
+
+        <link href="css/styles.css" rel="stylesheet"/>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/searchpanes/2.1.2/js/dataTables.searchPanes.min.js"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/searchpanes/2.1.2/js/searchPanes.bootstrap5.min.js"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/select/1.6.2/js/dataTables.select.min.js"
+                crossorigin="anonymous"></script>
+        <script src="js/datatable.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header class="header">
+            <div class="container">
+                <h1>Digitální podoba zpěvníků používaných v CASD</h1>
+            </div>
+        </header>
+        <main role="main" class="container">
+            <p>Projket si klade za cíl postupně agregovat a digitalizovat zpěvníky používané v Církvi adventistů sedmého
+                dne. Cílem je mít písně
+                dostupné ve strojově čitelném formátu tak, aby bylo možné je snadno, efektivně a důstojně<span
+                            class="text-red">*</span> promítnout při bohoslužbe, případně dále hromadně zpracovávat
+                a vytvářet výstupy automatizovaně. Písně zde uvedené jsou zpracovávány ve formátu OpenSong.</p>
+            <p>Projekt chce být co nejvíce transparentní, tedy veškeré zdrojové soubory potřebné pro tento web jsou
+                <a href="https://github.com/LoogleCZ/zpevniky-casd-web">volně dostupné</a>. Pokud byste chtěli přispět a doplnit tak chybějící písně či celé zpěvníky do databáze,
+                můžete tak učinit buď <a href="https://github.com/LoogleCZ/zpevniky-casd-db">přímo v repozitáři</a>, případně na <a href="mailto:mar.fabik@gmail.com">emailové adrese autora</a>. Rovněž opravy již dostupných písní jsou vítány.</p>
+            <p><span class="text-red">*</span> Autor nepovažuje promítání ad-hoc vyfocených stránek ze zpěvníku během
+                bohoslužby
+                za důstojný způsob oslavy Boha, pokud zde existují jiné způsoby jak text dostat k lidem - například
+                rozdáním papírových zpěvníků.</p>
+
+            <p><b>Momentálně sháníme digitální podobu zpěvníku Chci oslavovat, dříve dostupného na stránce hudbabox.com</b></p>
+
+            <h2>Zpěvníky</h2>
+
+            <p>
+                <?php if($block->getData('songbook-count') == 0): ?>
+                Aktuálně není k dispozici žádný zpěvník
+                <?php elseif($block->getData('songbook-count') == 1): ?>
+                Aktuálně je k dispozici 1 zpěvník
+                <?php elseif($block->getData('songbook-count') >= 2 && $block->getData('songbook-count') <= 4): ?>
+                Aktuálně jsou k dispozici <?= $block->getData('songbook-count') ?> zpěvníky
+                <?php else: ?>
+                Aktuálně je k dispozici <?= $block->getData('songbook-count') ?> zpěvníků
+                <?php endif; ?>
+            </p>
+            <?php if($block->getData('songbook-count') != 0): ?>
+
+            <ul>
+                <?php foreach($block->getData('songbooks') as $songbook): ?>
+                <li><a href="<?= $songbook->getData('download-url') ?>"><?= $songbook->getData('name') ?> (<?= $songbook->getData('song-count') ?>)</a></li>
+                <?php endforeach; ?>
+            </ul>
+
+            <?php endif; ?>
+
+            <h2>Písně</h2>
+
+            <table id="songs" class="table table-striped nowrap">
+                <thead>
+                    <tr>
+                        <th>Číslo</th>
+                        <th>Název</th>
+                        <th>Zpěvník</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($block->getData('songs') as $songbook => $songs): ?>
+                    <?php foreach($songs as $song): ?>
+                    <tr>
+                        <td><?= $song['idx'] ?? "&nbsp;" ?></td>
+                        <td><?= $song['name'] ?? "Chyba načítání názvu písně" ?></td>
+                        <td><?= $songbook ?></td>
+                        <td><a href="download/<?= $songbook ?>/<?= $song['filename'] ?>">Stažení</a></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <hr/>
+
+            <p>Tato stránka je pouze agregátorem dostupných písní. Veškerá autorská práva k jednotlivým písním náleží příslušným autorům.</p>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 text-left">
+                        <span class="text-muted">
+                            Web: <a href="https://github.com/LoogleCZ/zpevniky-casd-web/tree/<?= $block->getData(
+                                'web_commit'
+                            ) ?>" target="_blank"><?= $block->getData('web_commit_short') ?></a>,
+                            Databáze písní: <a
+                                    href="https://github.com/LoogleCZ/zpevniky-casd-db/tree/<?= $block->getData(
+                                        'db_commit'
+                                    ) ?>" target="_blank"><?= $block->getData('db_commit_short') ?></a>
+                        </span>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 text-left text-lg-center">
+                        <span class="text-muted">Sestaveno dne <?= $block->getData('build_date') ?></span>
+                    </div>
+                    <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 text-left text-lg-right">
+                        <span class="text-muted">Martin Fabík <a href="mailto:mar.fabik@gmail.com">&lt;mar.fabik@gmail.com&gt;</a></span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
