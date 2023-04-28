@@ -32,6 +32,9 @@ function loadSongBooks(): array
     $result = [];
     foreach ($songbooks as $songbook) {
         $songbook = basename($songbook);
+        if($songbook[0] == '_') {
+            continue;
+        }
         $dto = new DataObject();
         $dto->setData('name', $songbook);
         $dto->setData('download-url', 'download/' . $songbook . '.zip');
@@ -58,6 +61,9 @@ function fillSongs(): array
     $out = [];
     foreach ($songbooks as $songbook) {
         $songbook = basename($songbook);
+        if($songbook[0] == '_') {
+            continue;
+        }
 
         $songs = array_filter(
             glob('db/' . $songbook . '/*'),

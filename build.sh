@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 rm -r out/
 
@@ -10,6 +10,7 @@ php build.php index.phtml > out/index.html
 
 mkdir -p out/download
 cp -r db/* out/download
+rm -r out/download/_scripts
 
 for directory in out/download/*/ ; do
     current=`pwd`
