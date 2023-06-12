@@ -32,7 +32,18 @@ function loadSongBooks(): array
     $result = [];
     foreach ($songbooks as $songbook) {
         $songbook = basename($songbook);
-        if($songbook[0] == '_') {
+        if ($songbook[0] == '_') {
+            continue;
+        }
+        $songsCount = count(
+            array_filter(
+                glob('db/' . $songbook . '/*'),
+                function ($name) {
+                    return $name != '_metadata';
+                }
+            )
+        );
+        if (!$songsCount) {
             continue;
         }
         $dto = new DataObject();
@@ -40,14 +51,7 @@ function loadSongBooks(): array
         $dto->setData('download-url', 'download/' . $songbook . '.zip');
         $dto->setData(
             'song-count',
-            count(
-                array_filter(
-                    glob('db/' . $songbook . '/*'),
-                    function ($name) {
-                        return $name != '_metadata';
-                    }
-                )
-            )
+            $songsCount
         );
         $result[] = $dto;
     }
@@ -61,7 +65,7 @@ function fillSongs(): array
     $out = [];
     foreach ($songbooks as $songbook) {
         $songbook = basename($songbook);
-        if($songbook[0] == '_') {
+        if ($songbook[0] == '_') {
             continue;
         }
 
