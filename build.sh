@@ -6,6 +6,8 @@ mkdir -p out/css/
 mkdir -p out/js/
 cp src/templates/css/styles.css out/css/styles.css
 cp src/templates/js/datatable.js out/js/datatable.js
+cp src/.htaccess out/.htaccess
+cp src/view.php out/view.php
 php build.php index.phtml > out/index.html
 
 mkdir -p out/download

@@ -26,3 +26,7 @@ body {
 .text-red {
     color: red;
 }
+
+.action-link {
+    margin: auto 5px;
+}
