@@ -1,6 +1,6 @@
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^nahled/(.*)/(.*)/$ ./view.php?songbook=$1&song=$2 [QSA,L]
-    RewriteRule ^nahled/(.*)/(.*)$ ./view.php?songbook=$1&song=$2 [QSA,L]
+    RewriteRule ^nahled/(.*)/(.*)/$ ./view.php?songbook=$1&song=$2 "[QSA,L,B= ?,BNP]"
+    RewriteRule ^nahled/(.*)/(.*)$ ./view.php?songbook=$1&song=$2 "[QSA,L,B= ?,BNP]"
 </IfModule>
