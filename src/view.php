@@ -62,10 +62,12 @@
 
         <main role="main" class="container">
             <a href="http://zpevniky-casd.cz/">Zpět na obsah</a>
+
             <h2><?= $songbook ?></h2>
             <h3><?= $idx ?> - <?= $name ?></h3>
 
-            <pre><?php
+            <div class="row">
+                <?php
                 $lyrics = trim($xml->xpath('//song/lyrics')[0]);
                 $presentation = $xml->xpath('//song/presentation')[0];
                 $presentation = explode(' ', $presentation);
@@ -73,7 +75,7 @@
                 $currentSection = '';
                 $lines = explode("\n", $lyrics);
                 foreach ($lines as $line) {
-                    if(preg_match_all('/^\[([a-zA-Z0-9]*)\]$/m', trim($line), $matches, PREG_SET_ORDER, 0)) {
+                    if (preg_match_all('/^\[([a-zA-Z0-9]*)\]$/m', trim($line), $matches, PREG_SET_ORDER, 0)) {
                         $currentSection = $matches[0][1];
                         $finalForm[$currentSection] = '';
                         continue;
@@ -81,12 +83,26 @@
 
                     $finalForm[$currentSection] .= "\n" . trim($line);
                 }
+                ?>
 
-                foreach ($presentation as $item) {
-                    echo trim($finalForm[$item]);
-                    echo PHP_EOL . PHP_EOL;
-                }
-                ?></pre>
+                <aside class="col-1 text-end">
+                    <pre><?php
+                        foreach ($presentation as $item) {
+                            $newlines = substr_count(trim($finalForm[$item]), "\n");
+                            echo $item;
+                            echo str_pad("", $newlines + 2, "\n");
+                        }
+                        ?></pre>
+                </aside>
+                <div class="col-11">
+                    <pre><?php
+                        foreach ($presentation as $item) {
+                            echo trim($finalForm[$item]);
+                            echo PHP_EOL . PHP_EOL;
+                        }
+                        ?></pre>
+                </div>
+            </div>
         </main>
 
         <footer class="footer">
